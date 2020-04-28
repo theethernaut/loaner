@@ -4,24 +4,21 @@ import "./aave/FlashLoanReceiverBase.sol";
 import "./aave/ILendingPoolAddressesProvider.sol";
 import "./aave/ILendingPool.sol";
 
-import "./oasis/IOasisExchange.sol";
+import "./maker/OasisExchanger.sol";
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 
-contract Flasher is FlashLoanReceiverBase {
+contract Flasher is FlashLoanReceiverBase, OasisExchanger {
     using SafeMath for uint256;
 
     IERC20 public constant dai =  IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 public constant usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
-    IOasisExchange public constant oasisExchange = IOasisExchange(0x794e6e91555438aFc3ccF1c5076A74F42133d08D);
-
     constructor(address _addressProvider) FlashLoanReceiverBase(_addressProvider) public {}
 
     event ExecuteCalled(address reserve, uint256 amount, uint256 balance, uint256 fee, bytes params);
-    event DaiUsdcSwap(uint256 daiBalanceBefore, uint256 usdcBalanceBefore, uint256 daiBalanceAfter, uint256 usdcBalanceAfter);
     event Bailout(uint256 bail);
 
     function executeOperation(
@@ -42,7 +39,7 @@ contract Flasher is FlashLoanReceiverBase {
         // ------------------------------------------------------
 
         // 1. Exchange all loaned DAI to USDC.
-        daiToUsdc(_amount);
+        swapTokens(dai, _amount, usdc);
 
         // 2.
         // TODO.
@@ -63,33 +60,6 @@ contract Flasher is FlashLoanReceiverBase {
 
         // Return loan.
         transferFundsBackToPoolInternal(_reserve, totalDebt);
-    }
-
-    function daiToUsdc(uint256 _amountToSell) public {
-        // Register balances before swap.
-        uint256 daiBalanceBefore = dai.balanceOf(address(this));
-        uint256 usdcBalanceBefore = usdc.balanceOf(address(this));
-        require(daiBalanceBefore >= _amountToSell, "Not enough dai to sell.");
-
-        // Allow the exchange to move some of the contract's dai.
-        dai.approve(address(oasisExchange), uint256(-1));
-
-        // Reject low quotes.
-        // TODO.
-
-        // Perform the exchange.
-        oasisExchange.sellAllAmount(
-            dai,
-            _amountToSell,
-            usdc,
-            1
-        );
-
-        // Register balances after swap.
-        uint256 daiBalanceAfter = dai.balanceOf(address(this));
-        uint256 usdcBalanceAfter = usdc.balanceOf(address(this));
-
-        emit DaiUsdcSwap(daiBalanceBefore, usdcBalanceBefore, daiBalanceAfter, usdcBalanceAfter);
     }
 
     function flashloan(

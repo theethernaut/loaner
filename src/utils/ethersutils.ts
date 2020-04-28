@@ -3,6 +3,37 @@ import { ContractReceipt, Contract } from 'ethers/contract'
 import { formatUnits, parseUnits, BigNumber } from 'ethers/utils'
 import { ethers } from '@nomiclabs/buidler'
 
+export function traceEvent(receipt: ContractReceipt, eventName: string): void {
+  console.log(`${eventName} event:`)
+
+  let event
+  if (receipt.events && receipt.events.length > 0) {
+    event = receipt.events.find(e => e.event === eventName)
+  } else {
+    console.error('No events found in receipt.')
+  }
+
+  if (event) {
+    if (event.args) {
+      const args: any = event.args
+      const keys = Object.keys(args)
+      keys.map(key => {
+        if (isNaN(Number(key)) && key !== 'length') {
+          let value = args[`${key}`]
+
+          if (BigNumber.isBigNumber(value)) {
+            console.log(`  ${key}:`, toNum(value), `(${value})`)
+          } else {
+            console.log(`  ${key}:`, value)
+          }
+        }
+      })
+    }
+  } else {
+    console.error(`Event ${eventName} not found in receipt.`)
+  }
+}
+
 export function toNum(value: BigNumber, decimals: number = 18): number {
   return parseFloat(formatUnits(value, decimals))
 }
@@ -18,21 +49,6 @@ export function returnValueFromTxReceipt(receipt: ContractReceipt, eventName: St
 
 export function stringifyJson(json: any): string {
   return JSON.stringify(json, null, 2)
-}
-
-export async function deployContract(contractName: string, params: any[] = []): Promise<Contract> {
-  const factory = await ethers.getContractFactory(contractName)
-
-  const contract = (await factory.deploy(...params)).deployed()
-
-  return contract
-}
-
-export async function getContract(contractName: string, address: string): Promise<Contract> {
-  const factory = await ethers.getContractFactory(contractName)
-  const contract = factory.attach(address)
-
-  return contract
 }
 
 export async function getFirstSigner(): Promise<Signer> {

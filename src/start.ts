@@ -1,24 +1,26 @@
 import bre from "@nomiclabs/buidler"
 import * as params from './params'
 import * as utils from './utils/ethersutils'
-import { getTokens } from './elements/getTokens'
-import { deployContracts } from "./elements/deployContracts"
-import { traceEvent } from './utils/traceEvent'
+import * as tokens from './tokens'
+import * as flasher from "./flasher"
 
 async function main() {
   const signer = bre.ethers.provider.getSigner(params.SIGNER)
+  console.log(`\nSigner: ${params.SIGNER}`)
 
-  const { dai, usdc } = await getTokens(signer)
-  const { flasher } = await deployContracts(signer, dai)
+  const dai = await tokens.getToken(params.DAI, signer)
+  const usdc = await tokens.getToken(params.USDC, signer)
 
-  const tx = await flasher.flashloan(
-    dai.address,
-    utils.toBigNum(params.DAI_TO_BORROW)
-  )
-  const receipt = await tx.wait()
+  await flasher.deploy(signer)
 
-  traceEvent(receipt, 'ExecuteCalled')
-  traceEvent(receipt, 'Bailout')
+  if (params.ALLOW_BAILOUTS) {
+    await dai.approve(flasher.getAddress(), utils.toBigNum(100000000))
+  }
+
+  await flasher.execute(dai)
+
+  await flasher.withdraw(dai)
+  await flasher.withdraw(usdc)
 }
 
 main()
