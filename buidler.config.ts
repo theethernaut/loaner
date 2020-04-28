@@ -12,6 +12,9 @@ const config: BuidlerConfig = {
       timeout: 99999999
     }
   },
+  mocha: {
+    timeout: 99999999
+  },
   solc: {
     version: '0.6.6'
   },

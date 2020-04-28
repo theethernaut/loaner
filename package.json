@@ -9,7 +9,7 @@
     "typechain-contracts": "typechain --outDir typechain --target ethers 'artifacts/*.json'",
     "typechain-abis": "typechain --outDir typechain --target ethers 'abis/*.json'",
     "start": "buidler run src/start.ts",
-    "test": "buidler test --network buidlerevm"
+    "test": "buidler test --network localhost"
   },
   "dependencies": {
     "@nomiclabs/buidler": "^1.3.0",

@@ -5,7 +5,7 @@ import { ERC20Factory } from '../typechain/ERC20Factory'
 
 import { Signer } from 'ethers'
 
-export async function getToken(address: string, signer: Signer): Promise<ERC20> {
+export function getToken(address: string, signer: Signer): ERC20 {
   return ERC20Factory.connect(
     address,
     signer

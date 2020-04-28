@@ -8,8 +8,8 @@ async function main() {
   const signer = bre.ethers.provider.getSigner(params.SIGNER)
   console.log(`\nSigner: ${params.SIGNER}`)
 
-  const dai = await tokens.getToken(params.DAI, signer)
-  const usdc = await tokens.getToken(params.USDC, signer)
+  const dai = tokens.getToken(params.DAI, signer)
+  const usdc = tokens.getToken(params.USDC, signer)
 
   await flasher.deploy(signer)
 
