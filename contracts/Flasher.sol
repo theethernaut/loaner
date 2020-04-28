@@ -5,12 +5,13 @@ import "./aave/ILendingPoolAddressesProvider.sol";
 import "./aave/ILendingPool.sol";
 
 import "./maker/OasisExchanger.sol";
+import "./maker/VaultManager.sol";
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 
-contract Flasher is FlashLoanReceiverBase, OasisExchanger {
+contract Flasher is FlashLoanReceiverBase, OasisExchanger, VaultManager {
     using SafeMath for uint256;
 
     IERC20 public constant dai =  IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
@@ -42,6 +43,14 @@ contract Flasher is FlashLoanReceiverBase, OasisExchanger {
         swapTokens(dai, _amount, usdc);
 
         // 2.
+        uint256 usdcBalance = usdc.balanceOf(address(this));
+        openVault(
+            "USDC-A",
+            usdcBalance,
+            usdcBalance.div(2)
+        );
+
+        // 3.
         // TODO.
 
         // ------------------------------------------------------

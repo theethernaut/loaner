@@ -36,6 +36,8 @@ export async function execute(dai: ERC20): Promise<void> {
 
   utils.traceEvent(receipt, 'ExecuteCalled')
   utils.traceEvent(receipt, 'TokenSwap')
+  utils.traceEvent(receipt, 'VaultCreated')
+  utils.traceEvent(receipt, 'Log')
   utils.traceEvent(receipt, 'Bailout')
 }
 

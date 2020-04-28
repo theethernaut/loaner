@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "compile": "rm -rf artifacts && buidler compile --force",
+    "compile": "rm -rf artifacts && buidler compile --force && yarn typechain",
     "typechain": "rm -rf typechain && yarn typechain-contracts && yarn typechain-abis",
     "typechain-contracts": "typechain --outDir typechain --target ethers 'artifacts/*.json'",
     "typechain-abis": "typechain --outDir typechain --target ethers 'abis/*.json'",
