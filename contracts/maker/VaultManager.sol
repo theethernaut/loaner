@@ -12,14 +12,18 @@ contract VaultManager {
   address jug = 0x19c0976f590D67707E62397C87829d896Dc0f1F1;
   address daiJoinAdapter = 0x9759A6Ac90977b93B58547b4A71c78317f391A28;
 
-  struct Collateral {
-    address gemJoinAdapter;
+  struct GemInfo {
+    IERC20 token;
+    address joinAdapter;
   }
 
-  mapping(bytes32 => address) public gemJoinAdapters;
+  mapping(bytes32 => GemInfo) public gems;
 
   constructor() public {
-    gemJoinAdapters["USDC-A"] = 0xA191e578a6736167326d05c119CE0c90849E84B7;
+    gems["USDC-A"] = GemInfo(
+      IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48),
+      0xA191e578a6736167326d05c119CE0c90849E84B7
+    );
   }
 
   event VaultCreated(uint256 vaultId);
@@ -31,22 +35,22 @@ contract VaultManager {
     uint256 _collateralAmount,
     uint256 _daiLoanAmount
   ) public {
-    address gemJoinAdapter = gemJoinAdapters[_collateralAlias];
-    require(gemJoinAdapter != address(0x0), "Unsupported collateral type.");
+    GemInfo storage gem = gems[_collateralAlias];
+    require(gem.joinAdapter != address(0x0), "Unsupported collateral type.");
 
-    emit Log(_collateralAlias);
+    gem.token.approve(gem.joinAdapter, uint256(-1));
 
-    // uint256 vaultId = actions.openLockGemAndDraw(
-    //   manager,
-    //   jug,
-    //   gemJoinAdapter,
-    //   daiJoinAdapter,
-    //   _collateralAlias,
-    //   _collateralAmount,
-    //   _daiLoanAmount,
-    //   true
-    // );
+    uint256 vaultId = actions.openLockGemAndDraw(
+      manager,
+      jug,
+      gem.joinAdapter,
+      daiJoinAdapter,
+      _collateralAlias,
+      _collateralAmount,
+      _daiLoanAmount,
+      true
+    );
 
-    // emit VaultCreated(vaultId);
+    emit VaultCreated(vaultId);
   }
 }
