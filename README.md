@@ -6,8 +6,6 @@ Flash loan experiment using AAVE.
 
 The experiment basically bootstraps a flash loan and executes it, interacting with Oasis and Maker along the way.
 
-## Operation
-
 The financial operation doesn't make much sense per-se. The point of the experiment is not making money, but having a basic understanding of what programming a flash loan feels like.
 
 Anyhow, here's what it does:
