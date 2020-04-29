@@ -8,6 +8,8 @@ The experiment basically bootstraps a flash loan in the AAVE exchange. The flash
 
 ## Operation
 
+The financial operation doesn't make much sense per-se, but the point of the experiment is not making money, but having a basic understanding of what programming a flash loan feels like.
+
 1. Flash loans 1000 DAI from AAVE.
 2. Swaps 1000 DAI to ~1010 USDC using Oasis.
 3. Opens a maker vault depositing 1010 USDC as collateral.
