@@ -4,22 +4,24 @@ Flash loan experiment using AAVE.
 
 ## Experiment
 
-The experiment basically bootstraps a flash loan in the AAVE exchange. The flash loan itself interacts Oasis and maker, trading tokens and opening a vault.
+The experiment basically bootstraps a flash loan and executes it, interacting with Oasis and Maker along the way.
 
 ## Operation
 
-The financial operation doesn't make much sense per-se, but the point of the experiment is not making money, but having a basic understanding of what programming a flash loan feels like.
+The financial operation doesn't make much sense per-se. The point of the experiment is not making money, but having a basic understanding of what programming a flash loan feels like.
 
-1. Flash loans 1000 DAI from AAVE.
+Anyhow, here's what it does:
+
+1. Borows 1000 DAI from the AAVE flash pool.
 2. Swaps 1000 DAI to ~1010 USDC using Oasis.
-3. Opens a maker vault depositing 1010 USDC as collateral.
+3. Opens a Maker vault depositing 1010 USDC as collateral.
 4. Withdraws ~750 DAI from the vault.
 5. Withdraws 250 DAI from the EOA account and pays back the flash loan + fees.
 6. Contract ends up owning a 1010 USDC vault, which was purchased with 250 DAI.
 
-_Note: Atm, the opened vault is actually locked, since it belongs to a contract that has no way to interact with it. However, it shouldn't be hard to transfer the vault ownershop to the signer EOA._
+_Note: Atm, the opened vault is actually locked, since it belongs to a contract that has no way to interact with it. However, it shouldn't be hard to transfer the vault ownership to the signer EOA._
 
-## Instructions
+## Usage
 
 1. Clone
 2. Install with `yarn`
