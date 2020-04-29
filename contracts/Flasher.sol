@@ -47,7 +47,7 @@ contract Flasher is FlashLoanReceiverBase, OasisExchanger, VaultManager {
             usdc,
             'USDC-A',
             usdc.balanceOf(address(this)),
-            500 ether,
+            3 * _amount / 4,
             false
         );
 
