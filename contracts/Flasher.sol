@@ -14,7 +14,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract Flasher is FlashLoanReceiverBase, OasisExchanger, VaultManager {
     using SafeMath for uint256;
 
-    IERC20 public constant dai =  IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
+    IERC20 public constant dai  = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
     IERC20 public constant usdc = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
 
     constructor(address _addressProvider) FlashLoanReceiverBase(_addressProvider) public {}
@@ -42,13 +42,14 @@ contract Flasher is FlashLoanReceiverBase, OasisExchanger, VaultManager {
         // 1. Exchange all loaned DAI to USDC.
         swapTokens(dai, _amount, usdc);
 
-        // 2.
-        // uint256 usdcBalance = usdc.balanceOf(address(this));
-        // openVault(
-        //     usdc,
-        //     usdcBalance,
-        //     usdcBalance.div(2)
-        // );
+        // 2. Lock the USDC in a maker vault.
+        openVaultForThis(
+            usdc,
+            'USDC-A',
+            usdc.balanceOf(address(this)),
+            500 ether,
+            false
+        );
 
         // 3.
         // TODO.

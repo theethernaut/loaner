@@ -18,5 +18,5 @@ export const AAVE_PROVIDER = '0x24a42fD28C976A61Df5D00D0599C34c4f90748c8'
 // Gas.
 export const overrides = {
   gasLimit: 8e6,
-  gasPrice: 20e9
+  gasPrice: 60e9
 }

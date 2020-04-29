@@ -50,9 +50,11 @@ describe.only('VaultManager', () => {
     const amountToMint = utils.toBigNum(500)
 
     tx = await manager.openVault(
+      usdc.address,
       bre.ethers.utils.formatBytes32String('USDC-A'),
       amountToLock,
       amountToMint,
+      true,
       params.overrides
     )
     receipt = await tx.wait()

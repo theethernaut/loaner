@@ -13,8 +13,10 @@ export function getToken(address: string, signer: Signer): ERC20 {
 }
 
 export async function traceTokenBalance(address: string, token: ERC20): Promise<void> {
+  const symbol = await token.symbol()
+  const decimals = await token.decimals()
   const balance = await token.balanceOf(address)
 
-  console.log(`${utils.toNum(balance)} ${await token.symbol()}`)
+  console.log(`${utils.toNum(balance, decimals)} ${symbol}`)
 }
 

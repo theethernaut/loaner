@@ -11,6 +11,10 @@ async function main() {
   const dai = tokens.getToken(params.DAI, signer)
   const usdc = tokens.getToken(params.USDC, signer)
 
+  console.log(`Signer balances:`)
+  await tokens.traceTokenBalance(params.SIGNER, dai)
+  await tokens.traceTokenBalance(params.SIGNER, usdc)
+
   await flasher.deploy(signer)
 
   if (params.ALLOW_BAILOUTS) {
@@ -21,6 +25,10 @@ async function main() {
 
   await flasher.withdraw(dai)
   await flasher.withdraw(usdc)
+
+  console.log(`Signer balances:`)
+  await tokens.traceTokenBalance(params.SIGNER, dai)
+  await tokens.traceTokenBalance(params.SIGNER, usdc)
 }
 
 main()
