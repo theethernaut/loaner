@@ -19,7 +19,7 @@ describe('OasisExchanger', () => {
     console.log(`Signer: ${params.SIGNER}`)
   })
 
-  before('retrieve tokens and provide allowance', async () => {
+  before('retrieve tokens', async () => {
     dai = tokens.getToken(params.DAI, signer)
     usdc = tokens.getToken(params.USDC, signer)
     console.log('DAI:', dai.address)
@@ -36,13 +36,12 @@ describe('OasisExchanger', () => {
   })
 
   it('swaps dai for usdc', async () => {
-    const amountToSell = utils.toBigNum(1000)
-
     let exchangerUsdcBalance = await usdc.balanceOf(exchanger.address)
     console.log('Exchanger USDC balance (before):', utils.toNum(exchangerUsdcBalance))
 
     let tx
 
+    const amountToSell = utils.toBigNum(1000)
     tx = await dai.transfer(exchanger.address, amountToSell)
     await tx.wait()
 

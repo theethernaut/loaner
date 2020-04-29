@@ -16,7 +16,11 @@ const config: BuidlerConfig = {
     timeout: 99999999
   },
   solc: {
-    version: '0.6.6'
+    version: '0.6.6',
+    optimizer: {
+      enabled: true,
+      runs: 200
+    }
   },
   paths: {
     artifacts: './artifacts'

@@ -43,12 +43,12 @@ contract Flasher is FlashLoanReceiverBase, OasisExchanger, VaultManager {
         swapTokens(dai, _amount, usdc);
 
         // 2.
-        uint256 usdcBalance = usdc.balanceOf(address(this));
-        openVault(
-            "USDC-A",
-            usdcBalance,
-            usdcBalance.div(2)
-        );
+        // uint256 usdcBalance = usdc.balanceOf(address(this));
+        // openVault(
+        //     usdc,
+        //     usdcBalance,
+        //     usdcBalance.div(2)
+        // );
 
         // 3.
         // TODO.

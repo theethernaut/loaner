@@ -1,6 +1,6 @@
 pragma solidity ^0.6.6;
 
-abstract contract IDssProxyActions {
+abstract contract ActionsLike {
     function openLockGemAndDraw(
         address manager,
         address jug,
